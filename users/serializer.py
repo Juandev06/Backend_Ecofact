@@ -159,34 +159,30 @@ class CreateVendedorSerializer(serializer): # creamos una clase serializadora pa
             models.vendedor.objects.create(user=user, **vendedor_data)  # creamos el cliente y le asignamos el usuario que acabamos de crear y los datos del cliente que vienen del diccionario vendedor_data
         return user # y retornamos el objeto user que es el usuario que acabamos de crear
 
-
-class GetVendedoreSerializer(serializer): # creamos una clase serializadora para obtener los vendedores
+# creamos una clase serializadora para obtener los vendedores
+class GetVendedoreSerializer(serializer):
     class Meta:
-        model = models.user
-        fields = [ 'nombre_vendedor', 'apellido_vendedor', 'telefono_vendedor'] # rstos son los campos que se van a serializar y enviar al frontend 
-        read_only_fields = ['id_vendedor', 'user'] # estos campos no se pueden modificar desde el frontend 
-    def list_vendedor(self, id):
-        vendedor = self.Meta.model.objects.filter(id=id) # con el metodo filter podemos filtrar los objetos que se van a serializar, en este caso solo el vendedor que tiene el id_vendedor que se recibe como parametro
-        return vendedor
+        model = models.vendedor
+        fields = ['id_vendedor', 'user', 'nombre_vendedor', 'apellido_vendedor', 'telefono_vendedor']
+        read_only_fields = ['id_vendedor', 'user']
 
-
-
-class GetVendedoresSerializer(serializer): # creamos una clase serializadora para obtener los vendedores
+# Serializer para listar todos los vendedores
+class GetVendedoresSerializer(serializer): 
     class Meta:
-        model = models.user
-        fields = ['id', 'username', 'email', 'first_name', 'vendedor']
-        read_only_fields = ['id', 'username', 'email', 'first_name', 'vendedor']
-        
-        def list_vendedor(self):
-            vendedores = self.Meta.model.objects.filter(rol='Vendedor') # el metodo filter es para filtrar los objetos que se van a serializar, en este caso solo los usuarios que tienen el rol de vendedor
-            return vendedores 
+        model = models.vendedor
+        fields = [
+            'id_vendedor', 'user', 'nombre_vendedor', 'apellido_vendedor',
+            'tipo_documento', 'numero_documento', 'direccion_vendedor',
+            'telefono_vendedor', 'correo_vendedor'
+        ]
+        read_only_fields = ['id_vendedor', 'user']
 
 
-
+# Este endpoint es para actualizar los datos del vendedor
 class UpdateVendedorSerilizer(serializer):
     class Meta:
         model = models.vendedor
-        fields = ['nombre_vendedor', 'apellido_vendedor', 'telefono_vendedor'] # falta en los requerimientos funcionales definor si se van a poder actualizar todos los campos o solo algunos
+        fields = ['nombre_vendedor', 'apellido_vendedor','direccion_vendedor', 'telefono_vendedor','correo_vendedor'] # falta en los requerimientos funcionales definir si se van a poder actualizar todos los campos o solo algunos
         read_only_fields = ['id_vendedor', 'user'] 
 
         def update_vendedor(self, id, validated_data): # el metodo update_vendedor recibe el id del vendedor que se va a actualizar y los datos validados que se van a actualizar
@@ -204,11 +200,11 @@ class UpdateVendedorSerilizer(serializer):
 
 
 
-##Este##
+##Este serializer es para eliminar un vendedor
 class DeleteVendedorSerializer(serializer):
     class Meta:
         model = models.user
-        fields = ['id', 'username', 'email']  # Campos básicos, no vendedor (ya quitamos vendedor)
+        fields = ['id', 'username', 'email']  
         read_only_fields = ['id_vendedor', 'user']
 
     def delete_vendedor(self, id):

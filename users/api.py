@@ -117,3 +117,52 @@ def delete_cliente(request, id):
 ##----------------------------------------------------------------------------------------------------##
 # Se va a empezar a crear los endpoints para los vendedores
 ##----------------------------------------------------------------------------------------------------##
+# Crear un vendedor
+@api_view(['POST'])
+def create_vendedor(request):
+    vendedor_serializer = serializer.VendedorSerializer(data=request.data)
+    if vendedor_serializer.is_valid():
+        vendedor_serializer.save()
+        return Response(vendedor_serializer.data, status=status.HTTP_201_CREATED)
+    return Response(vendedor_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Obtener un vendedor por ID
+@api_view(['GET'])
+def get_vendedor(request, id):
+    try:
+        vendedor = models.vendedor.objects.get(id_vendedor=id)
+    except models.vendedor.DoesNotExist:
+        return Response({"error": "Vendedor no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    vendedor_serializer = serializer.VendedorSerializer(vendedor)
+    return Response(vendedor_serializer.data, status=status.HTTP_200_OK)
+
+
+# Actualizar un vendedor
+@api_view(['PUT'])
+def update_vendedor(request, id):
+    try:
+        vendedor = models.vendedor.objects.get(id_vendedor=id)
+    except models.vendedor.DoesNotExist:
+        return Response({"error": "Vendedor no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    vendedor_serializer = serializer.UpdateVendedorSerializer(vendedor, data=request.data, partial=True)
+    if vendedor_serializer.is_valid():
+        vendedor_serializer.save()
+        return Response(vendedor_serializer.data, status=status.HTTP_200_OK)
+    return Response(vendedor_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Eliminar un vendedor
+@api_view(['DELETE'])
+def delete_vendedor(request, id):
+    try:
+        vendedor = models.vendedor.objects.get(id_vendedor=id)
+    except models.vendedor.DoesNotExist:
+        return Response({"error": "Vendedor no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    vendedor.delete()
+    return Response({"mensaje": "Vendedor eliminado correctamente."}, status=status.HTTP_200_OK)
+
+# Listar todos los vendedores
+@api_view(['GET'])
+def list_vendedores(request):
+    vendedores = models.vendedor.objects.all()
+    vendedor_serializer = serializer.GetVendedoresSerializer(vendedores, many=True)
+    return Response(vendedor_serializer.data, status=status.HTTP_200_OK)
