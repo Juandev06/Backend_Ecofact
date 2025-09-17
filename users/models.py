@@ -6,6 +6,7 @@ from django.conf import settings
 from datetime import timedelta,datetime
 
 
+
 #Aquí se van a empezar a crear los modelos para el proyecto formativo de Ecofact
 
 class user (AbstractUser):
@@ -34,6 +35,13 @@ class empresaAdmin(models.Model):
     representante_legal = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     cufe = models.CharField(max_length=253)
+    token = models.CharField(max_length=255, blank=True, null=True)
+    
+    def crear_token(self):
+        import secrets
+        self.token = secrets.token_hex(32)
+        self.save()
+        return self.token
     
 
 class producto(models.Model):
@@ -80,6 +88,14 @@ class cliente(models.Model):
     telefono_cliente = models.TextField(max_length=15)
     correo_cliente = models.EmailField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    token = models.CharField(max_length=255, blank=True, null=True)
+    
+    def crear_token(self):
+        import secrets
+        self.token = secrets.token_hex(32)
+        self.save()
+        return self.token
+        
     
     
 class vendedor(models.Model):
@@ -93,6 +109,13 @@ class vendedor(models.Model):
     telefono_vendedor = models.CharField(max_length=15)
     correo_vendedor = models.EmailField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    token = models.CharField(max_length=255, blank=True, null=True)
+    
+    def crear_token(self):
+        import secrets
+        self.token = secrets.token_hex(32)
+        self.save()
+        return self.token
     
     
 class factura(models.Model):
