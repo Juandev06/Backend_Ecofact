@@ -52,7 +52,7 @@ class producto(models.Model):
     descripcion_producto = models.TextField(max_length=254, blank=False)
     precio_producto = models.DecimalField(max_digits=15, decimal_places=2)
     codigo_barras_producto = models.CharField(max_length=100, unique=True)
-    stock = models.IntegerField()
+    stock = models.IntegerField(default=0)
     
     
     
@@ -87,7 +87,7 @@ class vendedor(models.Model):
     id_vendedor = models.CharField(primary_key=True, max_length=50, default=cuid.cuid)
     nombre_vendedor = models.CharField(max_length=100)
     apellido_vendedor = models.CharField(max_length=100)
-    tipo_documento = models.ForeignKey(empresaAdmin, on_delete=models.CASCADE)
+    tipo_documento = models.CharField(max_length=4, default="CC")
     numero_documento = models.CharField(max_length=20)
     direccion_vendedor = models.TextField(max_length=200)
     telefono_vendedor = models.CharField(max_length=15)
