@@ -38,11 +38,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
+    'rest_framework_simplejwt',
     'login',
     'users',
     
 ]
+
+
+## aqui agregaremos los metodos personalizados que vamos a usar para la creacion de los tokens de acceso y contianuamente las cookies##
+
+REST_FRAMEWORK = {
+    
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

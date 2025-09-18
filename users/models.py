@@ -43,7 +43,7 @@ class empresaAdmin(models.Model):
         self.save()
         return self.token
     
-
+# Modelo de Producto
 class producto(models.Model):
     CATEGORIA_PRODUCTO_CHOICES = [
         ('Celulares', 'Celular'),
@@ -63,14 +63,14 @@ class producto(models.Model):
     stock = models.IntegerField(default=0)
     
     
-    
+# Modelo de Inventario
 class inventario(models.Model):
     id_inventario = models.CharField(primary_key=True, max_length=50, default=cuid.cuid)
     producto = models.ForeignKey(producto, on_delete=models.CASCADE)
     cantidad_disponible = models.IntegerField()
     fecha_ultima_actualizacion = models.DateTimeField(auto_now=True)
 
-
+# Modelo de Cliente
 class cliente(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="Cliente")
     id_cliente = models.CharField(primary_key=True, max_length=50, default=cuid.cuid, unique=True)
@@ -97,7 +97,7 @@ class cliente(models.Model):
         return self.token
         
     
-    
+# Modelo de Vendedor
 class vendedor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="Vendedor")
     id_vendedor = models.CharField(primary_key=True, max_length=50, default=cuid.cuid)
@@ -117,7 +117,7 @@ class vendedor(models.Model):
         self.save()
         return self.token
     
-    
+# Modelo de Factura
 class factura(models.Model):
     id_factura = models.CharField(primary_key=True, max_length=50, default=cuid.cuid, unique=True)
     vendedor = models.ForeignKey(vendedor, on_delete=models.CASCADE)
@@ -135,14 +135,17 @@ class factura(models.Model):
             self.fecha_vencimiento = self.fecha_emision + timedelta(days=30)
         self.total_con_iva = (self.total_sin_iva*self.iva) + self.total_sin_iva
         super().save(*args, **kwargs)
-        
+ 
+ 
+# Modelo de Detalle de Factura       
 class DetalleFactura(models.Model):
     factura = models.ForeignKey(factura, on_delete=models.CASCADE)
     producto = models.ForeignKey(producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
-    
+
+# Modelo de Historial de Factura
 class historialFactura(models.Model):
     id_historial = models.CharField(primary_key=True, max_length=50, default=cuid.cuid)
     factura = models.ForeignKey(factura, on_delete=models.CASCADE)
